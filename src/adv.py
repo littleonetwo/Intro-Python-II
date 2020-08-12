@@ -1,4 +1,5 @@
 from room import Room
+from player import Player
 
 # Declare all the rooms
 
@@ -49,3 +50,49 @@ room['treasure'].s_to = room['narrow']
 # Print an error message if the movement isn't allowed.
 #
 # If the user enters "q", quit the game.
+
+user_input = 0
+player = Player("Guy",room['outside'] )
+prev_dir = ""
+
+
+def update_game(new_room, prev_direction, item = "nothing" ): #function to call whenever a valid action takes place
+  player.prev_room = prev_direction
+  player.cur_room = new_room
+
+  if item != "nothing":
+    player.inventory_cap += 1
+    player.inventory_list.append(item)
+
+
+
+
+while user_input != "q":
+  print("Name: "+ player.name)
+  print("Current Room: " + player.cur_room.name)
+  print("\nRoom description: " + player.cur_room.description)
+  print("\nYou came from the " + player.prev_room + " direction.")
+
+  user_input = input("Choose a Direction: [n]orth, [s]outh, [e]ast, [w]est, or [q]uit: ")
+
+  validate_move = player.validate_direction(player.cur_room.name, user_input)
+
+
+
+  if validate_move != "You cannot go that direction at this time.":
+    if user_input == "n" :
+      prev_dir = "South"
+    elif user_input == "s" :
+      prev_dir = "North"
+    elif user_input == "w" :
+      prev_dir = "East"
+    else:
+      prev_dir = "West"
+
+    update_game(room[validate_move], prev_dir )
+
+  else:
+    if user_input != "q":
+      print("\n"+ validate_move)
+
+  print("\n \n")
